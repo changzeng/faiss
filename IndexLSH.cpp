@@ -146,6 +146,7 @@ void IndexLSH::search (
 
     int_maxheap_array_t res = { size_t(n), size_t(k), labels, idistances};
 
+    // 根据海明距离计算最近的K个向量
     hammings_knn_hc (&res, qcodes, codes.data(),
                      ntotal, bytes_per_vec, true);
 
@@ -187,6 +188,8 @@ void IndexLSH::sa_encode (idx_t n, const float *x,
     FAISS_THROW_IF_NOT (is_trained);
     const float *xt = apply_preprocess (n, x);
     ScopeDeleter<float> del (xt == x ? nullptr : xt);
+    // xt降维表示存在bytes中，nbits表示降维后的维度，n表示要压缩向量的数量
+    // 压缩方式为xt中大于等于0的在bytes中对应位置为1否则置为0
     fvecs2bitvecs (xt, bytes, nbits, n);
 }
 

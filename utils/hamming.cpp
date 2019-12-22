@@ -531,11 +531,17 @@ void hammings_knn(
     hammings_knn_hc(ha, a, b, nb, ncodes, order);
 }
 void hammings_knn_hc (
+        // 结果
         int_maxheap_array_t * ha,
+        // 查询码
         const uint8_t * a,
+        // 索引
         const uint8_t * b,
+        // 索引中向量的个数
         size_t nb,
+        // 单个向量索引大小
         size_t ncodes,
+        // 
         int order)
 {
     switch (ncodes) {

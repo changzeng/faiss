@@ -249,7 +249,9 @@ void RandomRotationMatrix::init (int seed)
     if(d_out <= d_in) {
         A.resize (d_out * d_in);
         float *q = A.data();
+        // 多线程随机生成数组
         float_randn(q, d_out * d_in, seed);
+        // 矩阵QR分解得到Q矩阵
         matrix_qr(d_in, d_out, q);
     } else {
         // use tight-frame transformation
