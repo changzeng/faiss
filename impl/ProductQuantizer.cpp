@@ -479,9 +479,9 @@ void ProductQuantizer::compute_codes_with_assign_index (
 
 }
 
-void ProductQuantizer::compute_codes (const float * x,
-                                      uint8_t * codes,
-                                      size_t n)  const
+void ProductQuantizer::compute_codes (const float * x, // 输入向量
+                                      uint8_t * codes, // 压缩编码
+                                      size_t n)  const // 输入向量的数量
 {
   // process by blocks to avoid using too much RAM
     size_t bs = 256 * 1024;
@@ -520,6 +520,7 @@ void ProductQuantizer::compute_distance_table (const float * x,
     size_t m;
 
     for (m = 0; m < M; m++) {
+        // 计算向量到每一聚类中心点的距离
         fvec_L2sqr_ny (dis_table + m * ksub,
                        x + m * dsub,
                        get_centroids(m, 0),
@@ -664,9 +665,11 @@ void ProductQuantizer::search (const float * __restrict x,
                                bool init_finalize_heap) const
 {
     FAISS_THROW_IF_NOT (nx == res->nh);
+    // dis_tables存储了每一子向量到子空间中所有聚类中心点的距离
     std::unique_ptr<float[]> dis_tables(new float [nx * ksub * M]);
     compute_distance_tables (nx, x, dis_tables.get());
 
+    // 利用dis_table近似计算到每一向量的距离
     pq_knn_search_with_tables<CMax<float, int64_t>> (
       *this, nbits, dis_tables.get(), codes, ncodes, res, init_finalize_heap);
 }

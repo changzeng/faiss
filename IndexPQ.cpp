@@ -77,6 +77,7 @@ void IndexPQ::add (idx_t n, const float *x)
 {
     FAISS_THROW_IF_NOT (is_trained);
     codes.resize ((n + ntotal) * pq.code_size);
+    // 计算压缩编码
     pq.compute_codes (x, &codes[ntotal * pq.code_size], n);
     ntotal += n;
 }
