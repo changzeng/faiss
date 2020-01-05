@@ -365,6 +365,7 @@ void PCAMatrix::train (Index::idx_t n, const float *x)
     ScopeDeleter<float> del_x (x != x_in ? x : nullptr);
 
     // compute mean
+    // 计算各维度均值
     mean.clear(); mean.resize(d_in, 0.0);
     if (have_bias) { // we may want to skip the bias
         const float *xi = x;

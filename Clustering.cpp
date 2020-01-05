@@ -93,6 +93,7 @@ void Clustering::train (idx_t nx, const float *x_in, Index & index) {
     const float *x = x_in;
     ScopeDeleter<float> del1;
 
+    // 如果总样本数过大就对数据进行采样
     if (nx > k * max_points_per_centroid) {
         if (verbose)
             printf("Sampling a subset of %ld / %ld for training\n",
@@ -187,6 +188,10 @@ void Clustering::train (idx_t nx, const float *x_in, Index & index) {
             index.train (k, centroids.data());
         }
 
+        // 聚类的时候需要选取最近的聚类中心点，这便是典型的ANN问题
+        // 使用faiss中提供的索引来完成这一过程加速计算
+        // 同时进行多次聚类以保证结果的准确性
+        // 使用数据点到聚类中心的距离之和来衡量聚类结果的好坏
         index.add (k, centroids.data());
         float err = 0;
         for (int i = 0; i < niter; i++) {
